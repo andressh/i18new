@@ -60,7 +60,7 @@ class Sheet {
   async writeLocalesMapToFiles() {
     return Promise.resolve(this.localesMap).each((content, locale) => {
       let localePath = `${this.localesPath}/${locale}`;
-      fs.mkdirSync(localePath, { recursive: true });
+      if (!fs.existsSync(localePath)) fs.mkdirSync(localePath, { recursive: true });
 
       let localeFile = `${localePath}/${this.name}.json`;
       content = JSON.stringify(content, null, 2);
