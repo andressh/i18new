@@ -1,6 +1,6 @@
 {
   "name": "i18new",
-  "version": "0.9",
+  "version": "0.9.2",
   "description": "i18next with google spreadsheet",
   "main": "src/index.js",
   "bin": {
