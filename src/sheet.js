@@ -52,7 +52,10 @@ class Sheet {
       let key = row[0];
       for (let i = 1; i < this.headers.length; i++) {
         let locale = this.headers[i];
-        _.set(this.localesMap[locale], key, row[i] || '');
+        // TODO option to control undefined vs ''
+        if(row[i]) {
+          _.set(this.localesMap[locale], key, row[i] || '');
+        }
       }
     }
   }
