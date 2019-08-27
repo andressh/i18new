@@ -10,7 +10,7 @@ const sheets = google.sheets('v4');
 Promise.promisifyAll(sheets.spreadsheets);
 
 class Sheet {
-  constructor({ sheetInfo, auth, spreadsheetId, localesPath, newline }) {
+  constructor({ sheetInfo, auth, spreadsheetId, localesPath, newline, localesDone}) {
     this.sheetInfo = sheetInfo;
     this.name = sheetInfo.properties.title;
     this.columnName = convertNumberToColumnName(
@@ -20,6 +20,7 @@ class Sheet {
     this.auth = auth;
     this.spreadsheetId = spreadsheetId;
     this.localesPath = localesPath;
+    this.localesDone = localesDone;
     this.newline = newline;
 
     this.headers = [];
@@ -62,13 +63,15 @@ class Sheet {
 
   async writeLocalesMapToFiles() {
     return Promise.resolve(this.localesMap).each((content, locale) => {
-      let localePath = `${this.localesPath}/${locale}`;
-      if (!fs.existsSync(localePath)) fs.mkdirSync(localePath, { recursive: true });
-
-      let localeFile = `${localePath}/${this.name}.json`;
-      content = JSON.stringify(content, null, 2);
-      if (this.newline) content = content + '\n';
-      fs.writeFileSync(localeFile, content);
+      // Proccess only ready languages or all if undefined
+      if(!this.localesDone || this.localesDone.indexOf(locale) >= 0) {
+        let localePath = `${this.localesPath}/${locale}`;
+        if (!fs.existsSync(localePath)) fs.mkdirSync(localePath, { recursive: true });
+        let localeFile = `${localePath}/${this.name}.json`;
+        content = JSON.stringify(content, null, 2);
+        if (this.newline) content = content + '\n';
+        fs.writeFileSync(localeFile, content);
+      }
     });
   }
 }

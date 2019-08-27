@@ -9,10 +9,11 @@ const sheets = google.sheets('v4');
 Promise.promisifyAll(sheets.spreadsheets);
 
 class I18nextSpreadsheet {
-  constructor({ credentials, spreadsheetId, localesPath, newline }) {
+  constructor({ credentials, spreadsheetId, localesPath, localesDone, newline }) {
     this.credentials = credentials;
     this.spreadsheetId = spreadsheetId;
     this.localesPath = localesPath;
+    this.localesDone = localesDone;
     this.newline = newline;
     this.sheets = [];
   }
@@ -31,16 +32,18 @@ class I18nextSpreadsheet {
   }
 
   async getSheets() {
-    const { auth, spreadsheetId, localesPath, newline } = this;
+    const { auth, spreadsheetId, localesPath, newline, localesDone } = this;
 
     const resp = await sheets.spreadsheets.getAsync({
       auth,
       spreadsheetId,
     });
 
+    const lsd = (localesDone)?localesDone.split(','):null;
+
     for (let sheetInfo of resp.data.sheets) {
       this.sheets.push(
-        new Sheet({ sheetInfo, auth, spreadsheetId, localesPath, newline })
+        new Sheet({ sheetInfo, auth, spreadsheetId, localesPath, newline, localesDone })
       );
     }
   }

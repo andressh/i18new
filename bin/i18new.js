@@ -12,6 +12,7 @@ cmd
     'Service Account credentials JSON data or file path'
   )
   .option('-p, --locales-path <p>', 'Locale files path')
+  .option('-d, --locales-done <d>', 'Locale ready to production')
   .option('-n, --newline', 'Locale files end with a newline')
   .parse(process.argv);
 
